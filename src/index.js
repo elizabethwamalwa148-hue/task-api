@@ -1,13 +1,16 @@
-const express = require('express');
-const app = express();
-const PORT = 3000;
+import express from 'express'
 
-app.use(express.json());
+const app = express()
+
+app.use(express.json())
 
 app.get('/', (req, res) => {
-  res.send('Task API is running!');
-});
+  res.send('Task API is running!')
+})
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
+
+const port = process.env.PORT ?? 3000
+app.listen(port, () => console.log(`Listening on ${port}`))

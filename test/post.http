@@ -1,0 +1,10 @@
+@baseUrl = https://jsonplaceholder.typicode.com
+
+POST {{baseUrl}}/posts
+Content-Type: application/json
+
+{
+  "title": "foo",
+  "body": "bar",
+  "userId": 1
+}
