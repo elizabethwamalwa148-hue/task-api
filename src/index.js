@@ -36,5 +36,13 @@ app.get('/tasks', (req, res) => {
   res.json(result)
 })
 
+app.get('/tasks/:id', (req, res) => {
+  const task = tasks.find((t) => t.id === Number(req.params.id))
+  if (!task) {
+    return res.status(404).json({ error: 'Task not found' })
+  }
+  res.json(task)
+})
+
 const port = process.env.PORT ?? 3000
 app.listen(port, () => console.log(`Listening on ${port}`))
