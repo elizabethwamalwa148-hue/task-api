@@ -1,0 +1,4 @@
+@baseUrl = https://jsonplaceholder.typicode.com
+
+
+HEAD {{baseUrl}}/posts/1
