@@ -6,7 +6,7 @@ app.use(express.json())
 const tasks = []
 let nextId = 1
 
-// NEW: helpers so the same checks aren't repeated in every route
+
 const isValidTitle = (value) => typeof value === 'string' && value.trim() !== ''
 const findTask = (id) => tasks.find((t) => t.id === Number(id))
 
@@ -40,6 +40,7 @@ app.get('/tasks', (req, res) => {
     result = result.filter((t) => String(t.done) === req.query.done)
   }
 
+  // NEW: ?q=text searches titles (case-insensitive)
   if (typeof req.query.q === 'string' && req.query.q.trim() !== '') {
     const needle = req.query.q.trim().toLowerCase()
     result = result.filter((t) => t.title.toLowerCase().includes(needle))
@@ -56,6 +57,47 @@ app.get('/tasks/:id', (req, res) => {
   }
   res.json(task)
 })
+
+
+app.put('/tasks/:id', (req, res) => {
+  const task = findTask(req.params.id)
+  if (!task) {
+    return res.status(404).json({ error: 'Task not found' })
+  }
+
+  const { title, done } = req.body ?? {}
+  if (!isValidTitle(title) || typeof done !== 'boolean') {
+    return res.status(400).json({ error: 'title and done are both required' })
+  }
+
+  task.title = title.trim()
+  task.done = done
+  res.json(task)
+})
+
+
+app.patch('/tasks/:id', (req, res) => {
+  const task = findTask(req.params.id)
+  if (!task) {
+    return res.status(404).json({ error: 'Task not found' })
+  }
+
+  const { title, done } = req.body ?? {}
+  if (title === undefined && done === undefined) {
+    return res.status(400).json({ error: 'send at least one of: title, done' })
+  }
+  if (title !== undefined && !isValidTitle(title)) {
+    return res.status(400).json({ error: 'title must be a non-empty string' })
+  }
+  if (done !== undefined && typeof done !== 'boolean') {
+    return res.status(400).json({ error: 'done must be a boolean' })
+  }
+
+  if (title !== undefined) task.title = title.trim()
+  if (done !== undefined) task.done = done
+  res.json(task)
+})
+
 app.use((err, req, res, next) => {
   if (err.type === 'entity.parse.failed') {
     return res.status(400).json({ error: 'Invalid JSON' })
