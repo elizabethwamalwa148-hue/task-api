@@ -40,7 +40,6 @@ app.get('/tasks', (req, res) => {
     result = result.filter((t) => String(t.done) === req.query.done)
   }
 
-  // NEW: ?q=text searches titles (case-insensitive)
   if (typeof req.query.q === 'string' && req.query.q.trim() !== '') {
     const needle = req.query.q.trim().toLowerCase()
     result = result.filter((t) => t.title.toLowerCase().includes(needle))
@@ -97,6 +96,18 @@ app.patch('/tasks/:id', (req, res) => {
   if (done !== undefined) task.done = done
   res.json(task)
 })
+
+
+app.delete('/tasks/:id', (req, res) => {
+  const index = tasks.findIndex((t) => t.id === Number(req.params.id))
+  if (index === -1) {
+    return res.status(404).json({ error: 'Task not found' })
+  }
+
+  tasks.splice(index, 1)
+  res.status(204).end()
+})
+
 
 app.use((err, req, res, next) => {
   if (err.type === 'entity.parse.failed') {
