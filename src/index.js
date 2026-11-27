@@ -2,7 +2,6 @@ import express from 'express'
 
 const app = express()
 
-
 app.use((req, res, next) => {
   const start = Date.now()
   res.on('finish', () => {
@@ -118,6 +117,10 @@ app.delete('/tasks/:id', (req, res) => {
   res.status(204).end()
 })
 
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' })
+})
 
 app.use((err, req, res, next) => {
   if (err.type === 'entity.parse.failed') {
