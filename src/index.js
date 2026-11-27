@@ -2,6 +2,7 @@ import express from 'express'
 
 const app = express()
 
+
 app.use((req, res, next) => {
   const start = Date.now()
   res.on('finish', () => {
@@ -122,11 +123,17 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })
 })
 
+// CHANGED: error handler (4 arguments, LAST). It no longer passes unknown
+// errors to next(err), which is what leaked stack traces to the client.
 app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err)
+
   if (err.type === 'entity.parse.failed') {
     return res.status(400).json({ error: 'Invalid JSON' })
   }
-  next(err)
+
+  console.error(err) 
+  res.status(500).json({ error: 'Internal server error' })
 })
 
 const port = process.env.PORT ?? 3000
