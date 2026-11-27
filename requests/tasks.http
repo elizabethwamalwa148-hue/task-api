@@ -1,0 +1,14 @@
+### Health check
+GET http://localhost:3000/health
+
+### Create a task
+POST http://localhost:3000/tasks
+Content-Type: application/json
+
+{ "title": "Learn HTTP" }
+
+### Create a task that is already done
+POST http://localhost:3000/tasks
+Content-Type: application/json
+
+{ "title": "Read the plan", "done": true }
