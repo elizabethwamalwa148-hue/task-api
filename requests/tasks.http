@@ -29,4 +29,70 @@ Content-Type: application/json
 POST http://localhost:3000/tasks
 Content-Type: application/json
 
+{bad
 
+### List all tasks
+GET http://localhost:3000/tasks
+
+### List only finished tasks
+GET http://localhost:3000/tasks?done=true
+
+### Search tasks by title
+GET http://localhost:3000/tasks?q=learn
+
+### Get one task
+GET http://localhost:3000/tasks/1
+
+### ERROR 404: get a task that does not exist
+GET http://localhost:3000/tasks/99
+
+### Replace a task (PUT)
+PUT http://localhost:3000/tasks/1
+Content-Type: application/json
+
+{ "title": "Learn HTTP well", "done": true }
+
+### ERROR 400: PUT without done
+PUT http://localhost:3000/tasks/1
+Content-Type: application/json
+
+{ "title": "Only a title" }
+
+### ERROR 404: PUT on a missing task
+PUT http://localhost:3000/tasks/99
+Content-Type: application/json
+
+{ "title": "Nothing here", "done": false }
+
+### Update part of a task (PATCH)
+PATCH http://localhost:3000/tasks/1
+Content-Type: application/json
+
+{ "done": false }
+
+### ERROR 400: PATCH with nothing to change
+PATCH http://localhost:3000/tasks/1
+Content-Type: application/json
+
+{}
+
+### ERROR 400: PATCH with a wrong type
+PATCH http://localhost:3000/tasks/1
+Content-Type: application/json
+
+{ "done": "yes" }
+
+### ERROR 404: PATCH on a missing task
+PATCH http://localhost:3000/tasks/99
+Content-Type: application/json
+
+{ "done": true }
+
+### Delete a task
+DELETE http://localhost:3000/tasks/2
+
+### ERROR 404: delete the same task again
+DELETE http://localhost:3000/tasks/2
+
+### ERROR 404: unknown route
+GET http://localhost:3000/nope
