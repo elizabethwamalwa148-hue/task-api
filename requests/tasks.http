@@ -12,3 +12,21 @@ POST http://localhost:3000/tasks
 Content-Type: application/json
 
 { "title": "Read the plan", "done": true }
+
+### ERROR 400: create with an empty title
+POST http://localhost:3000/tasks
+Content-Type: application/json
+
+{ "title": "" }
+
+### ERROR 400: create with done as a string
+POST http://localhost:3000/tasks
+Content-Type: application/json
+
+{ "title": "Bad done", "done": "yes" }
+
+### ERROR 400: create with broken JSON
+POST http://localhost:3000/tasks
+Content-Type: application/json
+
+
